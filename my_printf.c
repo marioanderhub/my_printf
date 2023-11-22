@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stdlib.h>
 
 /*
 Notes:
@@ -19,6 +20,33 @@ write
     write output str in one go to stdout
 */
 
+
+int count_specifiers(char *restrict format) {
+    int index = 0;
+    int count = 0;
+
+    while (format[index] != '\0') {
+        if (format[index] == '%') {
+            if (index == 0 || (index > 0 && format[index - 1] != '%')) {
+                count++;
+            }
+        }
+        index++;
+    }
+    return count;
+}
+
+int clean_up() {
+    return 0;
+}
+
+int int_to_string(char *dst, int *len, int variable, char specifier) {
+
+
+    return 0;
+}
+
+
 /*
 *
 * 
@@ -34,15 +62,61 @@ int my_printf(char *restrict format, ...) {
     va_start(args, format);
 
 
-    int index = 0;
-    int max_size = 0;
+    int index_format= 0;
+    int index_variables = 0;
+    int len = 0;
+    int specifier = 0;
+    int num_specifier = 0;
+    char **var_strs;
+    int *str_lens;
+    char *output_str;
+    
+    num_specifier = count_specifiers(format);
+    var_strs = malloc(sizeof(*var_strs) * num_specifier);
+    str_lens = malloc(sizeof(*str_lens) * num_specifier);
+    
+    if (var_strs == NULL || str_lens == NULL) {
+        return clean_up();
+    }
 
-    while (format[index] != '\0') {
-        if (format[index] == '%') {
+    while (format[index_format] != '\0') {
+        if (specifier && format[index_format] != '%') {
+            // handle specifier
+            switch (format[index_format]) {
+                case 'd':
+                    int_to_string(var_strs[index_variables], &str_lens[index_variables], va_arg(args, int), 'd');
+                    break;
+                case 'o':
 
+                    break;
+                case 'u':
+
+                    break;
+                case 'x':
+
+                    break;
+                case 'c':
+                    
+                    break;
+                case 's':
+
+                    break;
+                case 'p':
+
+                    break;
+            }
+
+
+            specifier = 0;
         }
-        max_size++;
-        index++;
+        else if (!specifier && format[index_format] == '%') {
+            specifier = 1;
+        }
+        else {
+            // normal character
+            len++;
+        }
+        index_format++;
     }
 
 
